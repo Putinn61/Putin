@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Putin’in Fantastik Dünyası</title>
+<style>
+  body {
+    background: #222;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  #game {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+  #chicken {
+    font-size: 80px;
+    position: absolute;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.1s;
+  }
+  #scoreboard {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  #timer {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  #finalMessage {
+    font-size: 30px;
+    margin-top: 40vh;
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div id="game">
+    <div id="scoreboard">Puan: 0</div>
+    <div id="timer">Süre: 30</div>
+    <div id="chicken">🐔</div>
+    <div id="finalMessage">Umuyorum yüzün hep böyle güler! 😊</div>
+  </div>
+<script>
+  const game = document.getElementById('game');
+  const chicken = document.getElementById('chicken');
+  const scoreboard = document.getElementById('scoreboard');
+  const timerDisplay = document.getElementById('timer');
+  const finalMessage = document.getElementById('finalMessage');
+
+  let score = 0;
+  let timeLeft = 30;
+  let gameInterval, countdownInterval;
+
+  function randomPosition() {
+    const x = Math.random() * (window.innerWidth - 80);
+    const y = Math.random() * (window.innerHeight - 80);
+    return { x, y };
+  }
+
+  function moveChicken() {
+    const pos = randomPosition();
+    chicken.style.left = pos.x + 'px';
+    chicken.style.top = pos.y + 'px';
+    chicken.style.transform = 'scale(1.1)';
+    setTimeout(() => {
+      chicken.style.transform = 'scale(1)';
+    }, 100);
+  }
+
+  function startGame() {
+    score = 0;
+    timeLeft = 30;
+    scoreboard.textContent = 'Puan: 0';
+    timerDisplay.textContent = 'Süre: 30';
+    finalMessage.style.display = 'none';
+    chicken.style.display = 'block';
+
+    moveChicken();
+    gameInterval = setInterval(moveChicken, 1000);
+
+    countdownInterval = setInterval(() => {
+      timeLeft--;
+      timerDisplay.textContent = 'Süre: ' + timeLeft;
+      if (timeLeft <= 0) {
+        endGame();
+      }
+    }, 1000);
+  }
+
+  function endGame() {
+    clearInterval(gameInterval);
+    clearInterval(countdownInterval);
+    chicken.style.display = 'none';
+    finalMessage.style.display = 'block';
+  }
+
+  chicken.addEventListener('click', () => {
+    score++;
+    scoreboard.textContent = 'Puan: ' + score;
+    moveChicken();
+  });
+
+  window.onload = () => {
+    alert('Entübe bir karakterim, tıklayarak puan kazan!\nOyuna başlamak için OK\'ye bas.');
+    startGame();
+  };
+</script>
+</body>
+</html>
